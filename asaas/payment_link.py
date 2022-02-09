@@ -22,9 +22,9 @@ class Payment_Link:
             auth=kwargs.get("auth"),
         )
 
-    def get_by_id(self, payment_link: str, **kwargs: Any) -> SyncAsync[Any]:
+    def get_by_id(self, payment_id: str, **kwargs: Any) -> SyncAsync[Any]:
         return self.parent.request(
-            path=f"/paymentLinks/{payment_link}", method="GET", auth=kwargs.get("auth")
+            path=f"/paymentLinks/{payment_id}", method="GET", auth=kwargs.get("auth")
         )
 
     def list(

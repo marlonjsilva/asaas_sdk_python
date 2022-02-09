@@ -14,6 +14,8 @@ from asaas.payments import Payments
 from asaas.installments import Installments
 from asaas.subscriptions import Subscriptions
 from asaas.payment_link import Payment_Link
+from asaas.transfers import Transfers
+from asaas.antecipations import Antecipations
 
 from asaas.errors import (
     APIResponseError,
@@ -73,6 +75,8 @@ class BaseClient:
         self.installments = Installments(parent=self)
         self.subscriptions = Subscriptions(parent=self)
         self.payment_link = Payment_Link(parent=self)
+        self.transfers = Transfers(parent=self)
+        self.antecipations = Antecipations(parent=self)
 
     @property
     def client(self) -> Union[httpx.Client, httpx.AsyncClient]:
