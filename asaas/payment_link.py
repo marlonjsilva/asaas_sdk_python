@@ -2,7 +2,7 @@ from asaas.typing import SyncAsync
 from typing import Any, Optional, Dict
 
 
-class Payment_Link:
+class PaymentLinks:
     def __init__(self, parent: Any) -> None:
         self.parent = parent
 

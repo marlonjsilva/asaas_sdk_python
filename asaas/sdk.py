@@ -13,9 +13,13 @@ from asaas.accounts import Accounts
 from asaas.payments import Payments
 from asaas.installments import Installments
 from asaas.subscriptions import Subscriptions
-from asaas.payment_link import Payment_Link
+from asaas.payment_link import PaymentLinks
 from asaas.transfers import Transfers
 from asaas.antecipations import Antecipations
+from asaas.payment_dunnings import PaymentDunnings
+from asaas.bill import Bill
+from asaas.credit_bureau_reports import CreditBureauReports
+from asaas.financial_transactions import FinancialTransactions
 
 from asaas.errors import (
     APIResponseError,
@@ -69,14 +73,19 @@ class BaseClient:
 
         self._clients: List[Union[httpx.Client, httpx.AsyncClient]] = []
         self.client = client
-        self.customer = Customer(parent=self)
+
+        self.customers = Customer(parent=self)
         self.accounts = Accounts(parent=self)
         self.payments = Payments(parent=self)
         self.installments = Installments(parent=self)
         self.subscriptions = Subscriptions(parent=self)
-        self.payment_link = Payment_Link(parent=self)
+        self.payment_links = PaymentLinks(parent=self)
         self.transfers = Transfers(parent=self)
         self.antecipations = Antecipations(parent=self)
+        self.payment_dunnings = PaymentDunnings(parent=self)
+        self.bill = Bill(parent=self)
+        self.credit_bureau_reports = CreditBureauReports(parent=self)
+        self.financial_transactions = FinancialTransactions(parent=self)
 
     @property
     def client(self) -> Union[httpx.Client, httpx.AsyncClient]:
