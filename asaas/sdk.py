@@ -20,6 +20,8 @@ from asaas.payment_dunnings import PaymentDunnings
 from asaas.bill import Bill
 from asaas.credit_bureau_reports import CreditBureauReports
 from asaas.financial_transactions import FinancialTransactions
+from asaas.my_account import MyAccount
+from asaas.invoices import Invoices
 
 from asaas.errors import (
     APIResponseError,
@@ -86,6 +88,8 @@ class BaseClient:
         self.bill = Bill(parent=self)
         self.credit_bureau_reports = CreditBureauReports(parent=self)
         self.financial_transactions = FinancialTransactions(parent=self)
+        self.my_account = MyAccount(parent=self)
+        self.invoices = Invoices(parent=self)
 
     @property
     def client(self) -> Union[httpx.Client, httpx.AsyncClient]:
