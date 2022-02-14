@@ -22,6 +22,9 @@ from asaas.credit_bureau_reports import CreditBureauReports
 from asaas.financial_transactions import FinancialTransactions
 from asaas.my_account import MyAccount
 from asaas.invoices import Invoices
+from asaas.customer_fiscal_info import CustomerFiscalInfo
+from asaas.mobile_phone_recharge import MobilePhoneRecharge
+from asaas.webhooks import Webhooks
 
 from asaas.errors import (
     APIResponseError,
@@ -90,6 +93,9 @@ class BaseClient:
         self.financial_transactions = FinancialTransactions(parent=self)
         self.my_account = MyAccount(parent=self)
         self.invoices = Invoices(parent=self)
+        self.customer_fiscal_info = CustomerFiscalInfo(parent=self)
+        self.mobile_phone_recharge = MobilePhoneRecharge(parent=self)
+        self.webhooks = Webhooks(parent=self)
 
     @property
     def client(self) -> Union[httpx.Client, httpx.AsyncClient]:
