@@ -142,10 +142,18 @@ class BaseClient:
             raise httpx._exceptions.RequestError("Enconde type is not valid!")
 
     def _parse_response(self, response: Response) -> Any:
-        if response.status_code == 200:
-            return {"status_code": response.status_code, "content": response.json()}
-        else:
-            return {"status_code": response.status_code, "content": response.json()}
+        try:
+            if response.status_code == 200:
+                return {"status_code": response.status_code, "content": response.json()}
+            else:
+                return {
+                    "status_code": response.status_code,
+                    "content": str(response.content),
+                }
+        except httpx.RequestNotRead:
+            raise httpx.RequestNotRead("Was not possible to read the request")
+        except Exception:
+            raise Exception("Unkown exception in BaseClient._parse_response")
 
     @abstractclassmethod
     def request(
