@@ -76,3 +76,18 @@ class PaymentDunnings:
             method="POST",
             auth=kwargs.get("auth"),
         )
+
+    def upload_documents(
+        self, payment_dunning_id: str, documents: list = None, **kwargs: Any
+    ) -> SyncAsync[Any]:
+        files = list()
+        for document in documents:
+            files.append(open(document, "rb"))
+
+        return self.parent.request(
+            path=f"/paymentDunnings/{payment_dunning_id}/documents",
+            method="POST",
+            files=files,
+            encode="multipart",
+            auth=kwargs.get("auth"),
+        )

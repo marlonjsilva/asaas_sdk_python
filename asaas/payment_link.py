@@ -1,3 +1,6 @@
+from base64 import encode
+from io import BufferedReader
+from optparse import Option
 from asaas.typing import SyncAsync
 from typing import Any, Optional, Dict
 
@@ -48,4 +51,16 @@ class PaymentLinks:
             auth=kwargs.get("auth"),
         )
 
-    # TODO Create image upload for link payments
+    def upload_image(
+        self, payment_link_id: str, image: str = None, **kwargs: Any
+    ) -> SyncAsync[Any]:
+        data = {"main": "true"}
+        file = {"image": open(image, "rb")}
+        return self.parent.request(
+            path=f"/paymentLinks/{payment_link_id}/images",
+            method="POST",
+            body=data,
+            files=file,
+            encode="multipart",
+            auth=kwargs.get("auth"),
+        )

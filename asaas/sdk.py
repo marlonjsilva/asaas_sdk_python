@@ -119,6 +119,8 @@ class BaseClient:
         self,
         method: str,
         path: str,
+        encode: Optional[str] = "json",
+        files: Optional[Dict[Any, Any]] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
         auth: Optional[str] = None,
@@ -128,21 +130,30 @@ class BaseClient:
             headers["access_code"] = f"{auth}"
         self.logger.info(f"{method} {self.client.base_url}{path}")
         self.logger.debug(f"=> {query} -- {body}")
-        return self.client.build_request(
-            method, path, params=query, json=body, headers=headers
-        )
+        if encode == "json":
+            return self.client.build_request(
+                method, path, params=query, json=body, headers=headers
+            )
+        elif "multipart":
+            return self.client.build_request(
+                method, path, params=query, data=body, files=files, headers=headers
+            )
+        else:
+            raise httpx._exceptions.RequestError("Enconde type is not valid!")
 
     def _parse_response(self, response: Response) -> Any:
         if response.status_code == 200:
             return {"status_code": response.status_code, "content": response.json()}
         else:
-            return {"status_code": response.status_code, "content": response.content}
+            return {"status_code": response.status_code, "content": response.json()}
 
     @abstractclassmethod
     def request(
         self,
         path: str,
         method: str,
+        encode: Optional[str] = "json",
+        files: Optional[Dict[Any, Any]] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
         auth: Optional[str] = None,
@@ -188,12 +199,22 @@ class Client(BaseClient):
         self,
         path: str,
         method: str,
+        encode: Optional[str] = "json",
+        files: Optional[Dict[Any, Any]] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
         auth: Optional[str] = None,
     ) -> Any:
         """Send an HTTP request."""
-        request = self._build_request(method, path, query, body, auth)
+        request = self._build_request(
+            method=method,
+            path=path,
+            query=query,
+            body=body,
+            encode=encode,
+            files=files,
+            auth=auth,
+        )
         try:
             response = self.client.send(request)
         except httpx.TimeoutException:
@@ -202,7 +223,7 @@ class Client(BaseClient):
 
 
 class AsyncClient(BaseClient):
-    """Asynchronous client for Notion's API."""
+    """Asynchronous client for Asaas API."""
 
     client: httpx.AsyncClient
 
@@ -238,12 +259,22 @@ class AsyncClient(BaseClient):
         self,
         path: str,
         method: str,
+        encode: Optional[str] = "json",
+        files: Optional[Dict[Any, Any]] = None,
         query: Optional[Dict[Any, Any]] = None,
         body: Optional[Dict[Any, Any]] = None,
         auth: Optional[str] = None,
     ) -> Any:
         """Send an HTTP request asynchronously."""
-        request = self._build_request(method, path, query, body, auth)
+        request = self._build_request(
+            method=method,
+            path=path,
+            query=query,
+            encode=encode,
+            files=files,
+            body=body,
+            auth=auth,
+        )
         try:
             response = await self.client.send(request)
         except httpx.TimeoutException:
